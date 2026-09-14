@@ -128,6 +128,13 @@ var CONFIG = {
   var bgMusicToggle = document.getElementById('bgMusicToggle');
   var bgMusicUserPaused = false;
   var bgMusicResumeTimer = null;
+  var albumVideoIsPlaying = false;
+
+  function resumeBgMusicIfAllowed(){
+    if(bgPlayer && !bgMusicUserPaused && bgMusicStarted && !albumVideoIsPlaying && !bgMusicPlaying){
+      bgPlayer.playVideo();
+    }
+  }
 
   function updateBgMusicIcon(){
     if(!bgMusicToggle) return;
@@ -153,12 +160,13 @@ var CONFIG = {
           bgMusicPlaying = (e.data === YT.PlayerState.PLAYING);
           updateBgMusicIcon();
           /* self-healing: if something other than our own pause button
-             stopped the music (e.g. a video's audio stealing focus on
-             mobile), bring it back automatically. */
-          if(!bgMusicPlaying && !bgMusicUserPaused && bgMusicStarted){
+             stopped the music, bring it back automatically — but not
+             while a memory video is actively playing, since fighting for
+             audio focus there just makes the video itself stop instead. */
+          if(!bgMusicPlaying && !bgMusicUserPaused && bgMusicStarted && !albumVideoIsPlaying){
             clearTimeout(bgMusicResumeTimer);
             bgMusicResumeTimer = setTimeout(function(){
-              if(bgPlayer && !bgMusicUserPaused) bgPlayer.playVideo();
+              if(bgPlayer && !bgMusicUserPaused && !albumVideoIsPlaying) bgPlayer.playVideo();
             }, 400);
           }
         }
@@ -444,6 +452,9 @@ var CONFIG = {
   var albumFrame = document.getElementById('albumFrame');
   var albumImage = document.getElementById('albumImage');
   var albumVideo = document.getElementById('albumVideo');
+  albumVideo.addEventListener('play', function(){ albumVideoIsPlaying = true; });
+  albumVideo.addEventListener('pause', function(){ albumVideoIsPlaying = false; resumeBgMusicIfAllowed(); });
+  albumVideo.addEventListener('ended', function(){ albumVideoIsPlaying = false; resumeBgMusicIfAllowed(); });
   var albumCaption = document.getElementById('albumCaption');
   var albumStory = document.getElementById('albumStory');
   var albumDock = document.getElementById('albumDock');
