@@ -4,6 +4,11 @@
    ========================================================================= */
 var CONFIG = {
 
+  // Simple password gate — this is NOT real security (anyone can view the
+  // page source and read it), just a casual "not for randos" lock.
+  // Change this to whatever you want before sharing the link.
+  sitePassword: "Maureen",
+
   // The day it all started — used to auto-count months & days together.
   relationshipStartDate: "2023-03-14",
   partnerName: "Bb",
@@ -21,7 +26,7 @@ var CONFIG = {
       { src: "static/assets/first-gala-4.jpg", type: "image" },
       { src: "static/assets/first-gala-5.jpg", type: "image" }
     ] },
-    { date: "Month, Year", title: "Our Favorite Moments", text: "A moment together that you'd replay on loop if you could.", image: "static/assets/fave-moments-1.jpg", album: [
+    { date: "Month, Year", title: "Our Favorite Moments", text: "", image: "static/assets/fave-moments-1.jpg", album: [
       { src: "static/assets/fave-moments-1.jpg", type: "image", caption: "mao tung time na gi laay ta, gusto ka mag motor2X ta hahhaa" },
       { src: "static/assets/fave-moments-2.mp4", type: "video", caption: "sabay ta nag new year diri December 31, 2023, di paka mutuo ani na ako ga luto sa imo gikaon 😕" },
       { src: "static/assets/fave-moments-3.jpg", type: "image", caption: "gwapa uy huhu" },
@@ -69,12 +74,12 @@ var CONFIG = {
 
   // Set `src` to a real photo path (e.g. "assets/photo-1.jpg") to replace a placeholder.
   gallery: [
-    { src: "static/assets/day-we-met.jpg", caption: "our first photo together" },
-    { src: "", caption: "that random tuesday that felt like a movie" },
-    { src: "", caption: "your favorite spot" },
-    { src: "", caption: "the trip we still talk about" },
-    { src: "", caption: "just us, being us" },
-    { src: "", caption: "one for the album" }
+    { src: "static/assets/gallery-1.jpg", caption: "that random tuesday that felt like a movie" },
+    { src: "static/assets/gallery-2.jpg", caption: "your favorite spot" },
+    { src: "static/assets/gallery-3.jpg", caption: "the trip we still talk about" },
+    { src: "static/assets/gallery-4.jpg", caption: "just us, being us" },
+    { src: "static/assets/gallery-5.jpg", caption: "one for the album" },
+    { src: "static/assets/gallery-6.jpg", caption: "one more for good measure" }
   ],
 
   letter: "Sometimes I don't say it enough, but I want you to know how grateful I am to have you in my life. You make ordinary days feel special, and I hope this little website reminds you how much you mean to me.",
@@ -90,6 +95,91 @@ var CONFIG = {
 };
 
 (function(){
+
+  /* ---------------- site password gate ---------------- */
+  var siteGate = document.getElementById('siteGate');
+  var siteGateForm = document.getElementById('siteGateForm');
+  var siteGateInput = document.getElementById('siteGateInput');
+  var siteGateError = document.getElementById('siteGateError');
+
+  if(sessionStorage.getItem('giftSiteUnlocked') === 'yes'){
+    siteGate.classList.add('is-unlocked');
+  }
+
+  siteGateForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(siteGateInput.value === CONFIG.sitePassword){
+      sessionStorage.setItem('giftSiteUnlocked', 'yes');
+      siteGate.classList.add('is-unlocked');
+      siteGateError.hidden = true;
+    } else {
+      siteGateError.hidden = false;
+      siteGateInput.value = '';
+      siteGateInput.focus();
+    }
+  });
+
+  /* ---------------- background music (YouTube) ---------------- */
+  var BG_MUSIC_VIDEO_ID = 'gQ3cqWIhbM8';
+  var bgPlayer = null;
+  var bgMusicReady = false;
+  var bgMusicStarted = false;
+  var bgMusicPlaying = false;
+  var bgMusicToggle = document.getElementById('bgMusicToggle');
+
+  function updateBgMusicIcon(){
+    if(!bgMusicToggle) return;
+    bgMusicToggle.classList.toggle('is-playing', bgMusicPlaying);
+    bgMusicToggle.setAttribute('aria-label', bgMusicPlaying ? 'Pause music' : 'Play music');
+  }
+
+  window.onYouTubeIframeAPIReady = function(){
+    bgPlayer = new YT.Player('bgMusicFrame', {
+      height: '1',
+      width: '1',
+      videoId: BG_MUSIC_VIDEO_ID,
+      playerVars: {
+        autoplay: 1, controls: 0, disablekb: 1, fs: 0, modestbranding: 1,
+        playsinline: 1, mute: 1, loop: 1, playlist: BG_MUSIC_VIDEO_ID
+      },
+      events: {
+        onReady: function(e){
+          bgMusicReady = true;
+          e.target.playVideo();
+        },
+        onStateChange: function(e){
+          bgMusicPlaying = (e.data === YT.PlayerState.PLAYING);
+          updateBgMusicIcon();
+        }
+      }
+    });
+  };
+  var ytApiTag = document.createElement('script');
+  ytApiTag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(ytApiTag);
+
+  function startUnmutedBgMusic(){
+    if(!bgPlayer || !bgMusicReady || bgMusicStarted) return;
+    bgMusicStarted = true;
+    bgPlayer.unMute();
+    bgPlayer.playVideo();
+  }
+  document.addEventListener('click', startUnmutedBgMusic);
+  document.addEventListener('touchstart', startUnmutedBgMusic);
+  document.addEventListener('keydown', startUnmutedBgMusic);
+
+  if(bgMusicToggle){
+    bgMusicToggle.addEventListener('click', function(){
+      if(!bgPlayer || !bgMusicReady) return;
+      bgMusicStarted = true;
+      if(bgMusicPlaying){
+        bgPlayer.pauseVideo();
+      } else {
+        bgPlayer.unMute();
+        bgPlayer.playVideo();
+      }
+    });
+  }
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -702,7 +792,6 @@ var CONFIG = {
   var giftFxBack = document.getElementById('giftFxBack');
   var giftFxFront = document.getElementById('giftFxFront');
   var giftFlowerWrap = document.getElementById('giftFlowerWrap');
-  var centerLight = document.getElementById('centerLight');
   var giftClose = document.getElementById('giftClose');
 
   var GIFT_CHARS = '0123456789ABCDEFGHIJKL+-*/=<>{}[]'.split('');
@@ -828,7 +917,6 @@ var CONFIG = {
     giftBg.classList.remove('is-dark');
     giftFxBack.classList.remove('is-visible');
     giftFxFront.classList.remove('is-visible');
-    centerLight.classList.remove('show-light', 'bloom');
     giftFlowerWrap.classList.remove('bloom', 'bloomed', 'is-clickable');
     frontParticles = frontParticles.filter(function(p){ return !p.isRain; });
   }
@@ -842,15 +930,13 @@ var CONFIG = {
       giftFxBack.classList.add('is-visible');
       giftFxFront.classList.add('is-visible');
     }, 400));
-    petalTimers.push(setTimeout(function(){ centerLight.classList.add('show-light'); }, 1200));
     petalTimers.push(setTimeout(function(){
-      centerLight.classList.add('bloom');
       giftFlowerWrap.classList.add('bloom');
       spawnFlowerRain();
-    }, 1900));
+    }, 900));
     petalTimers.push(setTimeout(function(){
       giftFlowerWrap.classList.add('bloomed', 'is-clickable');
-    }, 1900 + 2200 + 400));
+    }, 900 + 7000));
   }
 
   function closeGiftOverlay(){
