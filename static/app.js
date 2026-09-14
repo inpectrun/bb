@@ -126,6 +126,8 @@ var CONFIG = {
   var bgMusicStarted = false;
   var bgMusicPlaying = false;
   var bgMusicToggle = document.getElementById('bgMusicToggle');
+  var bgMusicUserPaused = false;
+  var bgMusicResumeTimer = null;
 
   function updateBgMusicIcon(){
     if(!bgMusicToggle) return;
@@ -150,6 +152,15 @@ var CONFIG = {
         onStateChange: function(e){
           bgMusicPlaying = (e.data === YT.PlayerState.PLAYING);
           updateBgMusicIcon();
+          /* self-healing: if something other than our own pause button
+             stopped the music (e.g. a video's audio stealing focus on
+             mobile), bring it back automatically. */
+          if(!bgMusicPlaying && !bgMusicUserPaused && bgMusicStarted){
+            clearTimeout(bgMusicResumeTimer);
+            bgMusicResumeTimer = setTimeout(function(){
+              if(bgPlayer && !bgMusicUserPaused) bgPlayer.playVideo();
+            }, 400);
+          }
         }
       }
     });
@@ -173,8 +184,10 @@ var CONFIG = {
       if(!bgPlayer || !bgMusicReady) return;
       bgMusicStarted = true;
       if(bgMusicPlaying){
+        bgMusicUserPaused = true;
         bgPlayer.pauseVideo();
       } else {
+        bgMusicUserPaused = false;
         bgPlayer.unMute();
         bgPlayer.playVideo();
       }
