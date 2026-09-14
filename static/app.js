@@ -66,7 +66,6 @@ var CONFIG = {
       { src: "static/assets/fave-moments-more-35.jpg", type: "image" },
       { src: "static/assets/fave-moments-more-36.jpg", type: "image" },
       { src: "static/assets/fave-moments-more-37.jpg", type: "image" },
-      { src: "static/assets/fave-moments-more-38.jpg", type: "image" },
       { src: "static/assets/fave-moments-more-39.jpg", type: "image" },
       { src: "static/assets/fave-moments-more-40.jpg", type: "image" },
       { src: "static/assets/fave-moments-more-41.jpg", type: "image" },
