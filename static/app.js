@@ -59,7 +59,24 @@ var CONFIG = {
       { src: "static/assets/fave-moments-more-27.mp4", type: "video", caption: "birthday sa akoa ate, gi pa adtu taka hhahaha gi pa kanta dayun uy hahhaha" },
       { src: "static/assets/fave-moments-more-28.jpg", type: "image", caption: "gikan taka gi sundo sa school nimo ani, naka remember pako nag hisgot ka ani na ma bagsak naka sa isa ka subject hahaha maong problemado kaayu kag nwong hahaha" },
       { src: "static/assets/fave-moments-more-29.jpg", type: "image", caption: "tag naa unsa mood nimo ate b? hahhahaha galit yarn? hahahahaha" },
-      { src: "static/assets/fave-moments-more-31.jpg", type: "image", caption: "peace yow!!!!!!!!!" }
+      { src: "static/assets/fave-moments-more-31.jpg", type: "image", caption: "peace yow!!!!!!!!!" },
+      { src: "static/assets/fave-moments-more-32.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-33.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-34.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-35.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-36.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-37.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-38.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-39.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-40.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-41.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-42.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-43.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-44.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-45.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-46.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-47.jpg", type: "image" },
+      { src: "static/assets/fave-moments-more-48.jpg", type: "image" }
     ] }
   ],
 
