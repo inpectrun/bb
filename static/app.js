@@ -169,6 +169,12 @@ var CONFIG = {
               if(bgPlayer && !bgMusicUserPaused && !albumVideoIsPlaying) bgPlayer.playVideo();
             }, 400);
           }
+          /* explicit replay-on-end, in case the loop/playlist trick doesn't
+             catch it on every device */
+          if(e.data === YT.PlayerState.ENDED && !albumVideoIsPlaying){
+            e.target.seekTo(0);
+            e.target.playVideo();
+          }
         }
       }
     });
